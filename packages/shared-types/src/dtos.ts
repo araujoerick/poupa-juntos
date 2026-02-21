@@ -8,16 +8,6 @@ export interface UserDTO {
   createdAt: string;
 }
 
-export interface GroupDTO {
-  id: string;
-  name: string;
-  inviteHash: string;
-  balance: number;
-  pendingBalance: number;
-  members: UserDTO[];
-  createdAt: string;
-}
-
 export interface GoalDTO {
   id: string;
   name: string;
@@ -25,6 +15,17 @@ export interface GoalDTO {
   deadline: string;
   status: GoalStatus;
   groupId: string;
+  createdAt: string;
+}
+
+export interface GroupDTO {
+  id: string;
+  name: string;
+  inviteHash: string;
+  balance: number;
+  pendingBalance: number;
+  members: UserDTO[];
+  goals?: GoalDTO[];
   createdAt: string;
 }
 
