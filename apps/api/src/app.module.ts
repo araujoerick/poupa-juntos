@@ -1,9 +1,14 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { clerkMiddleware } from '@clerk/express';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { User, Group, Goal, Contribution } from './entities/index.js';
+import { AuthModule } from './auth/auth.module.js';
+import { GroupModule } from './group/group.module.js';
+import { GoalModule } from './goal/goal.module.js';
+import { HealthModule } from './health/health.module.js';
 
 @Module({
   imports: [
@@ -27,8 +32,16 @@ import { User, Group, Goal, Contribution } from './entities/index.js';
         logging: config.get('NODE_ENV') !== 'production',
       }),
     }),
+    AuthModule,
+    GroupModule,
+    GoalModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(clerkMiddleware()).forRoutes('*');
+  }
+}
