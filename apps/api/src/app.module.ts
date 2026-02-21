@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module.js';
 import { GroupModule } from './group/group.module.js';
 import { GoalModule } from './goal/goal.module.js';
 import { HealthModule } from './health/health.module.js';
+import { ContributionModule } from './contribution/contribution.module.js';
+import { WorkerModule } from './worker/worker.module.js';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { HealthModule } from './health/health.module.js';
     GroupModule,
     GoalModule,
     HealthModule,
+    ContributionModule,
+    WorkerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
