@@ -14,9 +14,9 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { getAuth } from '@clerk/express';
 import type { Request } from 'express';
-import { GoalService } from './goal.service.js';
-import { CreateGoalDto } from './dto/create-goal.dto.js';
-import { UpdateGoalDto } from './dto/update-goal.dto.js';
+import { GoalService } from './goal.service';
+import { CreateGoalDto } from './dto/create-goal.dto';
+import { UpdateGoalDto } from './dto/update-goal.dto';
 
 @ApiBearerAuth()
 @ApiTags('goals')

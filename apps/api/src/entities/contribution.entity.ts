@@ -8,8 +8,8 @@ import {
 } from 'typeorm';
 import type { Relation } from 'typeorm';
 import { ContributionStatus } from '@poupa-juntos/shared-types';
-import { User } from './user.entity.js';
-import { Group } from './group.entity.js';
+import { User } from './user.entity';
+import { Group } from './group.entity';
 
 @Entity('contributions')
 export class Contribution {

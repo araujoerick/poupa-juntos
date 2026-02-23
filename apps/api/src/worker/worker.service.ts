@@ -12,10 +12,10 @@ import {
   ReceiveMessageCommand,
   SQSClient,
 } from '@aws-sdk/client-sqs';
-import { Contribution } from '../entities/contribution.entity.js';
-import { Group } from '../entities/group.entity.js';
-import { ContributionsGateway } from '../contribution/contributions.gateway.js';
-import { GeminiService } from '../gemini/gemini.service.js';
+import { Contribution } from '../entities/contribution.entity';
+import { Group } from '../entities/group.entity';
+import { ContributionsGateway } from '../contribution/contributions.gateway';
+import { GeminiService } from '../gemini/gemini.service';
 import { ContributionStatus } from '@poupa-juntos/shared-types';
 import type { ContributionDTO } from '@poupa-juntos/shared-types';
 

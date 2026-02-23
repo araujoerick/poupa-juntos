@@ -7,11 +7,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Goal } from '../entities/goal.entity.js';
-import { Group } from '../entities/group.entity.js';
-import { User } from '../entities/user.entity.js';
-import { CreateGoalDto } from './dto/create-goal.dto.js';
-import { UpdateGoalDto } from './dto/update-goal.dto.js';
+import { Goal } from '../entities/goal.entity';
+import { Group } from '../entities/group.entity';
+import { User } from '../entities/user.entity';
+import { CreateGoalDto } from './dto/create-goal.dto';
+import { UpdateGoalDto } from './dto/update-goal.dto';
 
 @Injectable()
 export class GoalService {

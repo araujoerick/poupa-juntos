@@ -2,15 +2,16 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { clerkMiddleware } from '@clerk/express';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
-import { User, Group, Goal, Contribution } from './entities/index.js';
-import { AuthModule } from './auth/auth.module.js';
-import { GroupModule } from './group/group.module.js';
-import { GoalModule } from './goal/goal.module.js';
-import { HealthModule } from './health/health.module.js';
-import { ContributionModule } from './contribution/contribution.module.js';
-import { WorkerModule } from './worker/worker.module.js';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { User, Group, Goal, Contribution } from './entities/index';
+import { AuthModule } from './auth/auth.module';
+import { GroupModule } from './group/group.module';
+import { GoalModule } from './goal/goal.module';
+import { HealthModule } from './health/health.module';
+import { ContributionModule } from './contribution/contribution.module';
+import { WorkerModule } from './worker/worker.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { WorkerModule } from './worker/worker.module.js';
     HealthModule,
     ContributionModule,
     WorkerModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

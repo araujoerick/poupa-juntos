@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import type { Relation } from 'typeorm';
 import { GoalStatus } from '@poupa-juntos/shared-types';
-import { Group } from './group.entity.js';
+import { Group } from './group.entity';
 
 @Entity('goals')
 export class Goal {

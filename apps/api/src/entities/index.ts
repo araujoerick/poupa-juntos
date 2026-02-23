@@ -1,4 +1,4 @@
-export { User } from './user.entity.js';
-export { Group } from './group.entity.js';
-export { Goal } from './goal.entity.js';
-export { Contribution } from './contribution.entity.js';
+export { User } from './user.entity';
+export { Group } from './group.entity';
+export { Goal } from './goal.entity';
+export { Contribution } from './contribution.entity';

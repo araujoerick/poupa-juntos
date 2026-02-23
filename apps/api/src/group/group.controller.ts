@@ -10,8 +10,8 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { getAuth } from '@clerk/express';
 import type { Request } from 'express';
-import { GroupService } from './group.service.js';
-import { CreateGroupDto } from './dto/create-group.dto.js';
+import { GroupService } from './group.service';
+import { CreateGroupDto } from './dto/create-group.dto';
 
 @ApiBearerAuth()
 @ApiTags('groups')

@@ -10,9 +10,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import type { Relation } from 'typeorm';
-import { User } from './user.entity.js';
-import { Goal } from './goal.entity.js';
-import { Contribution } from './contribution.entity.js';
+import { User } from './user.entity';
+import { Goal } from './goal.entity';
+import { Contribution } from './contribution.entity';
 
 @Entity('groups')
 export class Group {

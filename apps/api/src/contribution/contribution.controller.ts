@@ -19,8 +19,8 @@ import {
 } from '@nestjs/swagger';
 import { getAuth } from '@clerk/express';
 import type { Request } from 'express';
-import { ContributionService } from './contribution.service.js';
-import { CreateContributionDto } from './dto/create-contribution.dto.js';
+import { ContributionService } from './contribution.service';
+import { CreateContributionDto } from './dto/create-contribution.dto';
 
 @ApiBearerAuth()
 @ApiTags('contributions')

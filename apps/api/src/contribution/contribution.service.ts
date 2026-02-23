@@ -10,12 +10,12 @@ import { DataSource, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
-import { Contribution } from '../entities/contribution.entity.js';
-import { Group } from '../entities/group.entity.js';
-import { User } from '../entities/user.entity.js';
+import { Contribution } from '../entities/contribution.entity';
+import { Group } from '../entities/group.entity';
+import { User } from '../entities/user.entity';
 import { ContributionStatus } from '@poupa-juntos/shared-types';
 import type { ContributionDTO } from '@poupa-juntos/shared-types';
-import { CreateContributionDto } from './dto/create-contribution.dto.js';
+import { CreateContributionDto } from './dto/create-contribution.dto';
 
 @Injectable()
 export class ContributionService {

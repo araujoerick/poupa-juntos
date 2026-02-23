@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MulterModule } from '@nestjs/platform-express';
-import { Contribution } from '../entities/contribution.entity.js';
-import { Group } from '../entities/group.entity.js';
-import { User } from '../entities/user.entity.js';
-import { ContributionService } from './contribution.service.js';
-import { ContributionController } from './contribution.controller.js';
-import { ContributionsGateway } from './contributions.gateway.js';
+import { Contribution } from '../entities/contribution.entity';
+import { Group } from '../entities/group.entity';
+import { User } from '../entities/user.entity';
+import { ContributionService } from './contribution.service';
+import { ContributionController } from './contribution.controller';
+import { ContributionsGateway } from './contributions.gateway';
 
 @Module({
   imports: [

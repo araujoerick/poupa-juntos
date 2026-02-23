@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
-import { User, Group, Goal, Contribution } from './entities/index.js';
+import { User, Group, Goal, Contribution } from './entities/index';
 
 config();
 

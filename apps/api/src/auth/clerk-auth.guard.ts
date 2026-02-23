@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { getAuth } from '@clerk/express';
 import type { Request } from 'express';
-import { IS_PUBLIC_KEY } from './public.decorator.js';
+import { IS_PUBLIC_KEY } from './public.decorator';
 
 @Injectable()
 export class ClerkAuthGuard implements CanActivate {
