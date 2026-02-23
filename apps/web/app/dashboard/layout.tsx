@@ -1,4 +1,4 @@
-import { DashboardNav } from "@/components/layout/DashboardNav";
+import { BottomNav } from "@/components/layout/BottomNav";
 import { upsertMe } from "@/lib/api";
 
 export default async function DashboardLayout({
@@ -9,9 +9,9 @@ export default async function DashboardLayout({
   await upsertMe();
 
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardNav />
-      <main className="container mx-auto px-4 py-8">{children}</main>
+    <div className="min-h-dvh bg-brand-bg">
+      <main className="mx-auto max-w-lg px-4 pt-6 pb-24">{children}</main>
+      <BottomNav />
     </div>
   );
 }
