@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Body,
   Param,
   ParseUUIDPipe,
@@ -12,6 +13,7 @@ import { getAuth } from '@clerk/express';
 import type { Request } from 'express';
 import { GroupService } from './group.service';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupDto } from './dto/update-group.dto';
 
 @ApiBearerAuth()
 @ApiTags('groups')
@@ -35,6 +37,16 @@ export class GroupController {
   findOne(@Param('id', ParseUUIDPipe) id: string, @Req() req: Request) {
     const { userId } = getAuth(req);
     return this.groupService.findOne(id, userId!);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateGroupDto,
+    @Req() req: Request,
+  ) {
+    const { userId } = getAuth(req);
+    return this.groupService.update(id, userId!, dto);
   }
 
   @Post('join/:inviteHash')

@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { Group } from '../entities/group.entity';
 import { User } from '../entities/user.entity';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupDto } from './dto/update-group.dto';
 
 @Injectable()
 export class GroupService {
@@ -27,6 +28,8 @@ export class GroupService {
     const group = this.groupRepository.create({
       name: dto.name,
       inviteHash: crypto.randomUUID(),
+      targetAmount: dto.targetAmount ?? null,
+      deadline: dto.deadline ?? null,
       members: [user],
     });
 
@@ -43,7 +46,6 @@ export class GroupService {
         userId: user.id,
       })
       .leftJoinAndSelect('group.members', 'members')
-      .leftJoinAndSelect('group.goals', 'goals')
       .where('group.deletedAt IS NULL')
       .getMany();
   }
@@ -53,7 +55,6 @@ export class GroupService {
     const group = await this.groupRepository
       .createQueryBuilder('group')
       .leftJoinAndSelect('group.members', 'members')
-      .leftJoinAndSelect('group.goals', 'goals')
       .where('group.id = :id', { id })
       .andWhere('group.deletedAt IS NULL')
       .getOne();
@@ -64,6 +65,22 @@ export class GroupService {
     if (!isMember) throw new ForbiddenException('Access denied');
 
     return group;
+  }
+
+  async update(
+    id: string,
+    clerkId: string,
+    dto: UpdateGroupDto,
+  ): Promise<Group> {
+    const group = await this.findOne(id, clerkId);
+
+    if (dto.name !== undefined) group.name = dto.name;
+    if (dto.targetAmount !== undefined) group.targetAmount = dto.targetAmount;
+    if (dto.deadline !== undefined) group.deadline = dto.deadline;
+
+    const saved = await this.groupRepository.save(group);
+    this.logger.log({ event: 'group.updated', entityId: saved.id });
+    return saved;
   }
 
   async join(inviteHash: string, clerkId: string): Promise<Group> {
