@@ -18,9 +18,13 @@ export class GeminiService {
   >;
 
   constructor(private readonly config: ConfigService) {
-    const apiKey = config.getOrThrow<string>('GEMINI_API_KEY');
+    const apiKey = this.config.getOrThrow<string>('GEMINI_API_KEY');
     const ai = new GoogleGenerativeAI(apiKey);
-    this.model = ai.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+    this.model = ai.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      generationConfig: { responseMimeType: 'application/json' },
+    });
   }
 
   async analyzeReceipt(imageUrl: string): Promise<GeminiReceiptResult> {
@@ -28,9 +32,8 @@ export class GeminiService {
 
     try {
       const response = await fetch(imageUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch image: ${response.statusText}`);
-      }
+      if (!response.ok)
+        throw new Error(`Fetch image failed: ${response.statusText}`);
 
       const arrayBuffer = await response.arrayBuffer();
       const base64 = Buffer.from(arrayBuffer).toString('base64');
@@ -38,31 +41,16 @@ export class GeminiService {
 
       const result = await this.model.generateContent([
         RECEIPT_PROMPT,
-        {
-          inlineData: {
-            mimeType,
-            data: base64,
-          },
-        },
+        { inlineData: { mimeType, data: base64 } },
       ]);
 
+      // Com responseMimeType: 'application/json', o text() já vem como JSON puro
       const text = result.response.text();
-      // Strip markdown code fences if present
-      const cleaned = text
-        .replace(/^```(?:json)?\s*/i, '')
-        .replace(/\s*```$/i, '')
-        .trim();
-
-      const parsed: unknown = JSON.parse(cleaned);
+      const parsed: unknown = JSON.parse(text) as unknown;
 
       if (!isGeminiReceiptResult(parsed)) {
-        throw new Error('Unexpected response shape from Gemini');
+        throw new Error('Invalid response schema from AI');
       }
-
-      this.logger.log({
-        event: 'gemini.analyzed',
-        entityId: imageUrl,
-      });
 
       return parsed;
     } catch (error) {
@@ -70,7 +58,9 @@ export class GeminiService {
         { event: 'gemini.error', entityId: imageUrl },
         String(error),
       );
-      throw new InternalServerErrorException('Receipt analysis failed');
+      throw new InternalServerErrorException(
+        'Erro ao processar comprovante com IA',
+      );
     }
   }
 }

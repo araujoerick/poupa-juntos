@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   Logger,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
@@ -90,26 +91,56 @@ export class ContributionService {
         dto.amount,
       );
 
-      await this.sqs.send(
-        new SendMessageCommand({
-          QueueUrl: this.queueUrl,
-          MessageBody: JSON.stringify({
-            contributionId: saved.id,
-            receiptUrl,
-            groupId: dto.groupId,
-          }),
-        }),
-      );
-
-      this.logger.log({
-        event: 'contribution.created',
-        entityId: saved.id,
-      });
-
       return saved;
     });
 
+    await this.sqs.send(
+      new SendMessageCommand({
+        QueueUrl: this.queueUrl,
+        MessageBody: JSON.stringify({
+          contributionId: contribution.id,
+          receiptUrl,
+          groupId: dto.groupId,
+        }),
+      }),
+    );
+
+    this.logger.log({
+      event: 'contribution.created',
+      entityId: contribution.id,
+    });
+
     return this.toDto(contribution);
+  }
+
+  async cancel(id: string, clerkId: string): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { clerkId } });
+    if (!user) throw new NotFoundException('User not found');
+
+    const contribution = await this.contributionRepository.findOne({
+      where: { id },
+    });
+
+    if (!contribution) throw new NotFoundException('Contribution not found');
+    if (contribution.userId !== user.id)
+      throw new ForbiddenException('Access denied');
+    if (contribution.status !== ContributionStatus.PENDING) {
+      throw new BadRequestException(
+        'Only pending contributions can be cancelled',
+      );
+    }
+
+    await this.dataSource.transaction(async (em) => {
+      await em.remove(contribution);
+      await em.decrement(
+        Group,
+        { id: contribution.groupId },
+        'pendingBalance',
+        Number(contribution.amount),
+      );
+    });
+
+    this.logger.log({ event: 'contribution.cancelled', entityId: id });
   }
 
   async findAllForGroup(

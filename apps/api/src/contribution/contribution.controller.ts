@@ -2,7 +2,10 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseUUIDPipe,
   Post,
@@ -40,6 +43,14 @@ export class ContributionController {
     if (!file) throw new BadRequestException('Receipt file is required');
     const { userId } = getAuth(req);
     return this.contributionService.create(file, dto, userId!);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Cancelar aporte pendente' })
+  cancel(@Param('id', ParseUUIDPipe) id: string, @Req() req: Request) {
+    const { userId } = getAuth(req);
+    return this.contributionService.cancel(id, userId!);
   }
 
   @Get('group/:groupId')

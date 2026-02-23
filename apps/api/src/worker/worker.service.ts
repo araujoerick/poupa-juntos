@@ -35,6 +35,14 @@ function isSqsMessageBody(value: unknown): value is SqsMessageBody {
   );
 }
 
+// Gemini free tier: 10 RPM → 1 request per 6 seconds minimum
+const GEMINI_MIN_INTERVAL_MS = 6_000;
+const GEMINI_QUOTA_BACKOFF_MS = 60_000;
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 @Injectable()
 export class WorkerService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(WorkerService.name);
@@ -42,6 +50,7 @@ export class WorkerService implements OnModuleInit, OnModuleDestroy {
   private readonly queueUrl: string;
   private isRunning = false;
   private pollTimeout: ReturnType<typeof setTimeout> | null = null;
+  private lastGeminiCallAt = 0;
 
   constructor(
     @InjectRepository(Contribution)
@@ -159,7 +168,32 @@ export class WorkerService implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
-      const geminiResult = await this.geminiService.analyzeReceipt(receiptUrl);
+      await this.enforceGeminiRateLimit();
+
+      let geminiResult: Awaited<
+        ReturnType<typeof this.geminiService.analyzeReceipt>
+      >;
+      try {
+        this.lastGeminiCallAt = Date.now();
+        geminiResult = await this.geminiService.analyzeReceipt(receiptUrl);
+      } catch (geminiError) {
+        const msg = String(geminiError);
+        const isQuotaError =
+          msg.includes('429') ||
+          msg.includes('quota') ||
+          msg.includes('RESOURCE_EXHAUSTED');
+        if (isQuotaError) {
+          this.logger.error(
+            { event: 'worker.gemini.quota', entityId: contributionId },
+            `Gemini quota exceeded — backing off ${GEMINI_QUOTA_BACKOFF_MS / 1000}s`,
+          );
+          // Back off aggressively so we don't burn remaining quota
+          this.lastGeminiCallAt =
+            Date.now() + GEMINI_QUOTA_BACKOFF_MS - GEMINI_MIN_INTERVAL_MS;
+          // Do NOT delete SQS message — retry after backoff
+        }
+        throw geminiError;
+      }
 
       if (geminiResult.isValid) {
         const amount = Number(contribution.amount);
@@ -217,6 +251,18 @@ export class WorkerService implements OnModuleInit, OnModuleDestroy {
         String(error),
       );
       // Do NOT delete SQS message — it will become visible again after visibility timeout
+    }
+  }
+
+  private async enforceGeminiRateLimit(): Promise<void> {
+    const elapsed = Date.now() - this.lastGeminiCallAt;
+    const wait = GEMINI_MIN_INTERVAL_MS - elapsed;
+    if (wait > 0) {
+      this.logger.log({
+        event: 'worker.gemini.ratelimit',
+        entityId: `waiting ${wait}ms`,
+      });
+      await sleep(wait);
     }
   }
 
