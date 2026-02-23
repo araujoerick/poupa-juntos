@@ -66,3 +66,30 @@ export async function submitContribution(
   revalidatePath(`/dashboard/groups/${parsed.data.groupId}`);
   return { success: true };
 }
+
+export async function cancelContribution(
+  contributionId: string,
+  groupId: string,
+): Promise<{ success: boolean; error?: string }> {
+  const { getToken } = await auth();
+  const token = await getToken();
+  if (!token) return { success: false, error: "Não autenticado" };
+
+  const res = await fetch(`${API_BASE}/contributions/${contributionId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) {
+    const err = await res
+      .json()
+      .catch(() => ({ message: "Erro ao cancelar aporte" }));
+    return {
+      success: false,
+      error: (err as { message?: string }).message ?? "Erro ao cancelar aporte",
+    };
+  }
+
+  revalidatePath(`/dashboard/groups/${groupId}`);
+  return { success: true };
+}

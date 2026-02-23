@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 import { getGroup, getContributions } from "@/lib/api";
 import { GoalCard } from "@/components/goals/GoalCard";
 import { ContributionFeed } from "@/components/contributions/ContributionFeed";
@@ -13,6 +14,7 @@ interface Props {
 
 export default async function GroupDetailPage({ params }: Props) {
   const { groupId } = await params;
+  const { userId: clerkId } = await auth();
 
   let group, contributions;
   try {
@@ -23,6 +25,9 @@ export default async function GroupDetailPage({ params }: Props) {
   } catch {
     notFound();
   }
+
+  const currentMember = group.members.find((m) => m.clerkId === clerkId);
+  const currentUserId = currentMember?.id ?? "";
 
   return (
     <div className="space-y-8">
@@ -120,6 +125,7 @@ export default async function GroupDetailPage({ params }: Props) {
         <ContributionFeed
           groupId={groupId}
           initialContributions={contributions}
+          currentUserId={currentUserId}
         />
       </div>
     </div>
