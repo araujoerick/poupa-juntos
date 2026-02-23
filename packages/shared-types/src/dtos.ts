@@ -1,4 +1,4 @@
-import type { ContributionStatus, GoalStatus } from "./enums.js";
+import type { ContributionStatus, GoalStatus } from "./enums";
 
 export interface UserDTO {
   id: string;
