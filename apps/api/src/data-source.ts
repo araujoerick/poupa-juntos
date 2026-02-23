@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
-import { User, Group, Goal, Contribution } from './entities/index';
+import { User, Group, Contribution } from './entities/index';
 
 config();
 
@@ -12,7 +12,7 @@ export const AppDataSource = new DataSource({
   username: process.env['DB_USERNAME'] ?? 'postgres',
   password: process.env['DB_PASSWORD'] ?? 'postgres',
   database: process.env['DB_NAME'] ?? 'poupa_juntos',
-  entities: [User, Group, Goal, Contribution],
+  entities: [User, Group, Contribution],
   migrations: ['src/migrations/*.ts'],
   synchronize: false,
   logging: true,

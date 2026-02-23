@@ -4,10 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { clerkMiddleware } from '@clerk/express';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { User, Group, Goal, Contribution } from './entities/index';
+import { User, Group, Contribution } from './entities/index';
 import { AuthModule } from './auth/auth.module';
 import { GroupModule } from './group/group.module';
-import { GoalModule } from './goal/goal.module';
 import { HealthModule } from './health/health.module';
 import { ContributionModule } from './contribution/contribution.module';
 import { WorkerModule } from './worker/worker.module';
@@ -29,7 +28,7 @@ import { UserModule } from './user/user.module';
         username: config.getOrThrow<string>('DB_USERNAME'),
         password: config.getOrThrow<string>('DB_PASSWORD'),
         database: config.getOrThrow<string>('DB_NAME'),
-        entities: [User, Group, Goal, Contribution],
+        entities: [User, Group, Contribution],
         migrations: ['dist/migrations/*.js'],
         synchronize: false,
         logging: config.get('NODE_ENV') !== 'production',
@@ -37,7 +36,6 @@ import { UserModule } from './user/user.module';
     }),
     AuthModule,
     GroupModule,
-    GoalModule,
     HealthModule,
     ContributionModule,
     WorkerModule,
