@@ -11,7 +11,6 @@ import {
 } from 'typeorm';
 import type { Relation } from 'typeorm';
 import { User } from './user.entity';
-import { Goal } from './goal.entity';
 import { Contribution } from './contribution.entity';
 
 @Entity('groups')
@@ -31,6 +30,12 @@ export class Group {
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
   pendingBalance!: number;
 
+  @Column({ type: 'decimal', precision: 12, scale: 2, nullable: true })
+  targetAmount!: number | null;
+
+  @Column({ type: 'date', nullable: true })
+  deadline!: string | null;
+
   @ManyToMany(() => User, (user) => user.groups)
   @JoinTable({
     name: 'group_members',
@@ -38,9 +43,6 @@ export class Group {
     inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
   })
   members!: Relation<User[]>;
-
-  @OneToMany(() => Goal, (goal) => goal.group, { cascade: true })
-  goals!: Relation<Goal[]>;
 
   @OneToMany(() => Contribution, (contribution) => contribution.group, {
     cascade: true,
