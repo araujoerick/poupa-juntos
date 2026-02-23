@@ -5,10 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Tipografia */
+  --font-sans: var(--font-sora);
+  --font-mono: var(--font-geist-mono);
+
+  /* Tokens do Shadcn */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -45,18 +48,36 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Design system PoupaJuntos */
+  --color-coral: #FF7E7E;
+  --color-coral-dark: #e86060;
+  --color-lavender: #A78BFA;
+  --color-lavender-light: #ede9fe;
+  --color-brand-bg: #F8F7FF;
+  --color-teal: #2DD4BF;
+  --color-dark-bg: #0A0A14;
+  --color-dark-primary: #FF4DB8;
+  --color-dark-accent: #00F5D4;
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --radius: 1rem;
+
+  /* Fundo geral: lavender claro */
+  --background: #F8F7FF;
   --foreground: oklch(0.145 0 0);
+
+  /* Cards: branco */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+
+  /* Primary: coral */
+  --primary: #FF7E7E;
+  --primary-foreground: #ffffff;
+
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -66,7 +87,7 @@
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: #FF7E7E;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -74,8 +95,8 @@
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-primary: #FF7E7E;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
@@ -121,6 +142,41 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground min-h-dvh;
+  }
+}
+
+@layer utilities {
+  /* Esconde scrollbar mantendo funcionalidade de scroll */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Sombra padrão dos cards */
+  .card-shadow {
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Gradientes dos grupos */
+  .gradient-coral {
+    background: linear-gradient(135deg, #FF7E7E 0%, #A78BFA 100%);
+  }
+  .gradient-purple {
+    background: linear-gradient(135deg, #C084FC 0%, #60A5FA 100%);
+  }
+  .gradient-teal {
+    background: linear-gradient(135deg, #2DD4BF 0%, #60A5FA 100%);
+  }
+  .gradient-pink {
+    background: linear-gradient(135deg, #F472B6 0%, #FBBF24 100%);
+  }
+
+  /* Safe area para bottom nav em dispositivos com notch */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
