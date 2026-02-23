@@ -1,5 +1,5 @@
 import "server-only";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import type {
   GroupDTO,
   GoalDTO,
@@ -31,6 +31,19 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   return res.json() as Promise<T>;
+}
+
+export async function upsertMe(): Promise<void> {
+  const user = await currentUser();
+  if (!user) return;
+
+  const email = user.emailAddresses[0]?.emailAddress ?? "";
+  const name = [user.firstName, user.lastName].filter(Boolean).join(" ") || email;
+
+  await apiFetch("/users/me", {
+    method: "POST",
+    body: JSON.stringify({ email, name }),
+  });
 }
 
 export async function getGroups(): Promise<GroupDTO[]> {

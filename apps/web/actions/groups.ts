@@ -62,8 +62,7 @@ export async function createGroup(
   }
 
   revalidatePath("/dashboard");
-  revalidatePath("/dashboard/groups");
-  redirect("/dashboard/groups");
+  redirect("/dashboard");
 }
 
 export async function joinGroup(
@@ -106,6 +105,5 @@ export async function joinGroup(
   }
 
   revalidatePath("/dashboard");
-  revalidatePath("/dashboard/groups");
-  redirect("/dashboard/groups");
+  redirect("/dashboard");
 }

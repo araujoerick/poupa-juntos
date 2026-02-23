@@ -1,10 +1,13 @@
 import { DashboardNav } from "@/components/layout/DashboardNav";
+import { upsertMe } from "@/lib/api";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await upsertMe();
+
   return (
     <div className="min-h-screen bg-background">
       <DashboardNav />
