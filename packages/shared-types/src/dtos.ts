@@ -1,4 +1,4 @@
-import type { ContributionStatus, GoalStatus } from "./enums";
+import type { ContributionStatus } from "./enums";
 
 export interface UserDTO {
   id: string;
@@ -8,24 +8,15 @@ export interface UserDTO {
   createdAt: string;
 }
 
-export interface GoalDTO {
-  id: string;
-  name: string;
-  targetAmount: number;
-  deadline: string;
-  status: GoalStatus;
-  groupId: string;
-  createdAt: string;
-}
-
 export interface GroupDTO {
   id: string;
   name: string;
   inviteHash: string;
   balance: number;
   pendingBalance: number;
+  targetAmount: number | null;
+  deadline: string | null;
   members: UserDTO[];
-  goals?: GoalDTO[];
   createdAt: string;
 }
 
@@ -41,12 +32,14 @@ export interface ContributionDTO {
 
 export interface CreateGroupDTO {
   name: string;
+  targetAmount?: number;
+  deadline?: string;
 }
 
-export interface CreateGoalDTO {
-  name: string;
-  targetAmount: number;
-  deadline: string;
+export interface UpdateGroupDTO {
+  name?: string;
+  targetAmount?: number | null;
+  deadline?: string | null;
 }
 
 export interface CreateContributionDTO {

@@ -3,9 +3,3 @@ export enum ContributionStatus {
   VALIDATED = "VALIDATED",
   REJECTED = "REJECTED",
 }
-
-export enum GoalStatus {
-  ACTIVE = "ACTIVE",
-  COMPLETED = "COMPLETED",
-  CANCELLED = "CANCELLED",
-}
