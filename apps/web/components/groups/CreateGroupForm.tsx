@@ -16,13 +16,13 @@ export function CreateGroupForm() {
     <form action={formAction} className="space-y-4">
       <div className="space-y-1.5">
         <label htmlFor="name" className="text-sm font-medium">
-          Nome do Grupo
+          Nome do Grupo / Meta
         </label>
         <input
           id="name"
           name="name"
           type="text"
-          placeholder="Ex: Viagem para Europa 2026"
+          placeholder="Ex: Viagem para o Japão 🇯🇵"
           disabled={isPending}
           className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"
           required
@@ -30,6 +30,45 @@ export function CreateGroupForm() {
         {state.fieldErrors?.["name"] && (
           <p className="text-xs text-destructive">
             {state.fieldErrors["name"][0]}
+          </p>
+        )}
+      </div>
+
+      <div className="space-y-1.5">
+        <label htmlFor="targetAmount" className="text-sm font-medium">
+          Valor da Meta <span className="text-muted-foreground">(opcional)</span>
+        </label>
+        <input
+          id="targetAmount"
+          name="targetAmount"
+          type="number"
+          step="0.01"
+          min="1"
+          placeholder="Ex: 6000"
+          disabled={isPending}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"
+        />
+        {state.fieldErrors?.["targetAmount"] && (
+          <p className="text-xs text-destructive">
+            {state.fieldErrors["targetAmount"][0]}
+          </p>
+        )}
+      </div>
+
+      <div className="space-y-1.5">
+        <label htmlFor="deadline" className="text-sm font-medium">
+          Prazo <span className="text-muted-foreground">(opcional)</span>
+        </label>
+        <input
+          id="deadline"
+          name="deadline"
+          type="date"
+          disabled={isPending}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"
+        />
+        {state.fieldErrors?.["deadline"] && (
+          <p className="text-xs text-destructive">
+            {state.fieldErrors["deadline"][0]}
           </p>
         )}
       </div>

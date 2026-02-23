@@ -32,8 +32,13 @@ export async function createGroup(
     return { success: false, error: "Não autenticado" };
   }
 
+  const rawTargetAmount = formData.get("targetAmount");
+  const rawDeadline = formData.get("deadline");
+
   const parsed = createGroupSchema.safeParse({
     name: formData.get("name"),
+    targetAmount: rawTargetAmount ? rawTargetAmount : undefined,
+    deadline: rawDeadline ? rawDeadline : undefined,
   });
 
   if (!parsed.success) {

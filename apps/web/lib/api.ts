@@ -2,7 +2,6 @@ import "server-only";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import type {
   GroupDTO,
-  GoalDTO,
   ContributionDTO,
 } from "@poupa-juntos/shared-types";
 
@@ -52,10 +51,6 @@ export async function getGroups(): Promise<GroupDTO[]> {
 
 export async function getGroup(id: string): Promise<GroupDTO> {
   return apiFetch<GroupDTO>(`/groups/${id}`);
-}
-
-export async function getGoals(groupId: string): Promise<GoalDTO[]> {
-  return apiFetch<GoalDTO[]>(`/groups/${groupId}/goals`);
 }
 
 export async function getContributions(

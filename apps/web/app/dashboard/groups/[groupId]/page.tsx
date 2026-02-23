@@ -2,9 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { getGroup, getContributions } from "@/lib/api";
-import { GoalCard } from "@/components/goals/GoalCard";
 import { ContributionFeed } from "@/components/contributions/ContributionFeed";
-import { GoalProgressChart } from "@/components/goals/GoalProgressChart";
 import { InviteLink } from "@/components/groups/InviteLink";
 import { MoneyDisplay } from "@/components/shared/MoneyDisplay";
 
@@ -28,6 +26,11 @@ export default async function GroupDetailPage({ params }: Props) {
 
   const currentMember = group.members.find((m) => m.clerkId === clerkId);
   const currentUserId = currentMember?.id ?? "";
+
+  const progressPercent =
+    group.targetAmount && group.targetAmount > 0
+      ? Math.min(100, Math.round((group.balance / group.targetAmount) * 100))
+      : null;
 
   return (
     <div className="space-y-8">
@@ -54,6 +57,36 @@ export default async function GroupDetailPage({ params }: Props) {
         </Link>
       </div>
 
+      {/* Progresso da meta */}
+      {group.targetAmount && (
+        <div className="rounded-lg border bg-card p-4 space-y-2">
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Progresso</span>
+            <span className="font-medium">{progressPercent}%</span>
+          </div>
+          <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+            <div
+              className="h-full rounded-full bg-primary transition-all"
+              style={{ width: `${progressPercent ?? 0}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <MoneyDisplay amount={group.balance} />
+            <MoneyDisplay amount={group.targetAmount} />
+          </div>
+          {group.deadline && (
+            <p className="text-xs text-muted-foreground">
+              Prazo:{" "}
+              {new Date(group.deadline).toLocaleDateString("pt-BR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Saldo */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-lg border bg-card p-4">
@@ -73,50 +106,6 @@ export default async function GroupDetailPage({ params }: Props) {
       <div className="space-y-1.5">
         <p className="text-sm font-medium">Convite</p>
         <InviteLink inviteHash={group.inviteHash} />
-      </div>
-
-      {/* Metas */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Metas</h2>
-          <Link
-            href={`/dashboard/groups/${groupId}/goals/new`}
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            + Nova meta
-          </Link>
-        </div>
-
-        {group.goals && group.goals.length > 0 ? (
-          <>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {group.goals.map((goal) => (
-                <GoalCard
-                  key={goal.id}
-                  goal={goal}
-                  confirmedBalance={group.balance}
-                />
-              ))}
-            </div>
-            <div className="rounded-lg border bg-card p-4">
-              <p className="mb-3 text-sm font-medium">Progresso dos Aportes</p>
-              <GoalProgressChart
-                contributions={contributions}
-                targetAmount={group.goals[0]?.targetAmount ?? 0}
-              />
-            </div>
-          </>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            Nenhuma meta criada ainda.{" "}
-            <Link
-              href={`/dashboard/groups/${groupId}/goals/new`}
-              className="font-medium text-primary hover:underline"
-            >
-              Criar meta
-            </Link>
-          </p>
-        )}
       </div>
 
       {/* Feed de aportes */}
