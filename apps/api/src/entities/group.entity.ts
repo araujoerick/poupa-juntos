@@ -30,10 +30,16 @@ export class Group {
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
   pendingBalance!: number;
 
-  @Column({ type: 'decimal', precision: 12, scale: 2, nullable: true })
+  @Column({
+    name: 'target_amount',
+    type: 'decimal',
+    precision: 12,
+    scale: 2,
+    nullable: true,
+  })
   targetAmount!: number | null;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ name: 'deadline', type: 'date', nullable: true })
   deadline!: string | null;
 
   @ManyToMany(() => User, (user) => user.groups)
