@@ -6,6 +6,9 @@ import { SubmitButton } from "@/components/shared/SubmitButton";
 
 const initialState: GroupActionState = { success: false };
 
+const inputClass =
+  "flex h-11 w-full rounded-xl border border-input bg-brand-bg px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coral/50 focus-visible:border-coral disabled:opacity-50";
+
 export function CreateGroupForm() {
   const [state, formAction, isPending] = useActionState(
     createGroup,
@@ -16,7 +19,7 @@ export function CreateGroupForm() {
     <form action={formAction} className="space-y-4">
       <div className="space-y-1.5">
         <label htmlFor="name" className="text-sm font-medium">
-          Nome do Grupo / Meta
+          Nome do grupo
         </label>
         <input
           id="name"
@@ -24,7 +27,7 @@ export function CreateGroupForm() {
           type="text"
           placeholder="Ex: Viagem para o Japão 🇯🇵"
           disabled={isPending}
-          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"
+          className={inputClass}
           required
         />
         {state.fieldErrors?.["name"] && (
@@ -36,7 +39,8 @@ export function CreateGroupForm() {
 
       <div className="space-y-1.5">
         <label htmlFor="targetAmount" className="text-sm font-medium">
-          Valor da Meta <span className="text-muted-foreground">(opcional)</span>
+          Valor da meta{" "}
+          <span className="text-muted-foreground font-normal">(opcional)</span>
         </label>
         <input
           id="targetAmount"
@@ -44,9 +48,9 @@ export function CreateGroupForm() {
           type="number"
           step="0.01"
           min="1"
-          placeholder="Ex: 6000"
+          placeholder="Ex: 6.000,00"
           disabled={isPending}
-          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"
+          className={inputClass}
         />
         {state.fieldErrors?.["targetAmount"] && (
           <p className="text-xs text-destructive">
@@ -57,14 +61,15 @@ export function CreateGroupForm() {
 
       <div className="space-y-1.5">
         <label htmlFor="deadline" className="text-sm font-medium">
-          Prazo <span className="text-muted-foreground">(opcional)</span>
+          Prazo{" "}
+          <span className="text-muted-foreground font-normal">(opcional)</span>
         </label>
         <input
           id="deadline"
           name="deadline"
           type="date"
           disabled={isPending}
-          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"
+          className={inputClass}
         />
         {state.fieldErrors?.["deadline"] && (
           <p className="text-xs text-destructive">
@@ -74,12 +79,17 @@ export function CreateGroupForm() {
       </div>
 
       {state.error && (
-        <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+        <p className="rounded-xl bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {state.error}
         </p>
       )}
 
-      <SubmitButton pendingText="Criando...">Criar Grupo</SubmitButton>
+      <SubmitButton
+        pendingText="Criando grupo..."
+        className="w-full h-11 rounded-xl bg-coral text-white font-semibold text-sm transition-opacity hover:opacity-90 disabled:opacity-50"
+      >
+        Criar Grupo
+      </SubmitButton>
     </form>
   );
 }
