@@ -7,7 +7,7 @@ import { UserButton } from "@clerk/nextjs";
 
 const navItems = [
   { href: "/dashboard", icon: Home, label: "Início", exact: true },
-  { href: "/dashboard", icon: Users, label: "Grupos", exact: true },
+  { href: "/dashboard/groups", icon: Users, label: "Grupos", exact: false },
   { href: "/dashboard/groups/new", icon: Plus, label: "Novo", isFab: true },
   { href: "/dashboard/learn", icon: BookOpen, label: "Aprender", exact: false },
 ] as const;
