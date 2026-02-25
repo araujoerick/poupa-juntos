@@ -21,6 +21,22 @@ export function getServerNow(): number {
   return Date.now();
 }
 
+const DAILY_TIPS = [
+  "A taxa Selic subiu. Considere o Tesouro Direto para parte da poupança do grupo.",
+  "Revise assinaturas mensais. Cancelar 2 serviços pode liberar R$80/mês para aportes.",
+  "Compras parceladas acima de 3x custam mais com a inflação. Prefira poupar e pagar à vista.",
+  "Guardar R$10 por dia equivale a R$3.650 no fim do ano. Pequenos hábitos importam!",
+  "Fundos de renda fixa CDI costumam render mais que a poupança tradicional.",
+  "Divida a meta do grupo pelo número de meses restantes para saber o aporte mensal ideal.",
+  "Aportes automáticos logo após o salário evitam o impulso de gastar antes de poupar.",
+] as const;
+
+/** Returns a tip that rotates daily, deterministic from the given timestamp. */
+export function getDailyTip(now: number): string {
+  const dayIndex = Math.floor(now / (1000 * 60 * 60 * 24));
+  return DAILY_TIPS[dayIndex % DAILY_TIPS.length] ?? DAILY_TIPS[0];
+}
+
 export type MemberStatus = "em-chamas" | "pendente" | "atrasado" | "novato";
 
 export function getMemberStatus(

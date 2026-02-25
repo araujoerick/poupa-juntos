@@ -2,9 +2,10 @@ import Link from "next/link";
 import { Bell } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
 import { getGroups, getContributions } from "@/lib/api";
-import { calcDaysLeft } from "@/lib/utils";
+import { calcDaysLeft, getDailyTip, getServerNow } from "@/lib/utils";
 import { PrimaryGroupCard } from "@/components/groups/PrimaryGroupCard";
 import { SavingsStreakCard } from "@/components/groups/SavingsStreakCard";
+import { SmartTipCard } from "@/components/dashboard/SmartTipCard";
 import { GroupCard } from "@/components/groups/GroupCard";
 import { MoneyDisplay } from "@/components/shared/MoneyDisplay";
 import { ContributionStatus } from "@poupa-juntos/shared-types";
@@ -39,8 +40,10 @@ export default async function DashboardPage() {
 
   const aiPrediction = calcAIPrediction(contributions);
 
+  const now = getServerNow();
   const primaryGroupDaysLeft =
     primaryGroup?.deadline != null ? calcDaysLeft(primaryGroup.deadline) : null;
+  const dailyTip = getDailyTip(now);
 
   return (
     <div className="space-y-5">
@@ -92,37 +95,35 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* Stats Grid */}
+      {/* Stats Grid — 3 columns: Streak | IA Forecast | Smart Tip */}
       {primaryGroup && (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-2">
           <SavingsStreakCard contributions={contributions} />
 
-          <div className="bg-card rounded-2xl p-4 card-shadow flex flex-col gap-1.5">
-            <div className="flex items-center gap-1.5">
-              <span className="text-xl" aria-hidden>
+          <div className="bg-card rounded-2xl p-3 card-shadow flex flex-col gap-1.5">
+            <div className="flex items-center gap-1">
+              <span className="text-base" aria-hidden>
                 🤖
               </span>
-              <span className="text-xs text-muted-foreground font-medium">
-                Previsão IA
-              </span>
             </div>
+            <p className="text-[10px] font-semibold leading-none">Previsão IA</p>
             {aiPrediction > 0 ? (
               <>
                 <MoneyDisplay
                   amount={aiPrediction}
-                  className="text-xl font-bold text-teal"
+                  className="text-base font-bold text-teal leading-none"
                 />
-                <p className="text-xs text-muted-foreground">
-                  previsto este mês
-                </p>
+                <p className="text-[10px] text-muted-foreground">este mês</p>
               </>
             ) : (
               <>
-                <p className="text-xl font-bold text-muted-foreground">—</p>
-                <p className="text-xs text-muted-foreground">sem dados ainda</p>
+                <p className="text-base font-bold text-muted-foreground leading-none">—</p>
+                <p className="text-[10px] text-muted-foreground">sem dados</p>
               </>
             )}
           </div>
+
+          <SmartTipCard tip={dailyTip} />
         </div>
       )}
 
