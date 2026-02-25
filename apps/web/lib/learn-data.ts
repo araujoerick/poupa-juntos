@@ -45,7 +45,8 @@ export const ARTICLES: Article[] = [
   {
     id: "habitos-dia-a-dia",
     title: "Economizando no Dia a Dia",
-    description: "Pequenos hábitos que geram grandes economias ao longo do ano.",
+    description:
+      "Pequenos hábitos que geram grandes economias ao longo do ano.",
     category: "Poupança",
     emoji: "☕",
     readMinutes: 3,
@@ -94,15 +95,15 @@ export const ARTICLES: Article[] = [
     emoji: "🛡️",
     readMinutes: 4,
   },
-  {
-    id: "negociar-dividas",
-    title: "Como Negociar Suas Dívidas",
-    description:
-      "Técnicas para renegociar com credores e sair do vermelho mais rápido.",
-    category: "Dívidas",
-    emoji: "🤝",
-    readMinutes: 5,
-  },
+  // {
+  //   id: "negociar-dividas",
+  //   title: "Como Negociar Suas Dívidas",
+  //   description:
+  //     "Técnicas para renegociar com credores e sair do vermelho mais rápido.",
+  //   category: "Dívidas",
+  //   emoji: "🤝",
+  //   readMinutes: 5,
+  // },
 ];
 
 export const QUIZ_QUESTIONS: QuizQuestion[] = [
