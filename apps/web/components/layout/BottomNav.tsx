@@ -69,7 +69,15 @@ export function BottomNav() {
 
         {/* Perfil — Clerk UserButton */}
         <div className="flex flex-col items-center gap-0.5 px-4 py-2">
-          <UserButton afterSignOutUrl="/" />
+          <UserButton
+            afterSignOutUrl="/"
+            appearance={{
+              elements: {
+                avatarBox: "w-5 h-5",
+                userButtonTrigger: "focus:shadow-none",
+              },
+            }}
+          />
           <span className="text-[10px] font-medium text-muted-foreground">
             Perfil
           </span>
