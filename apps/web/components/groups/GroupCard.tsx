@@ -58,7 +58,7 @@ export function GroupCard({ group, gradientIndex = 0 }: GroupCardProps) {
       >
         {/* Top row: name + target */}
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold leading-tight truncate">{group.name}</h3>
+          <h3 className="text-lg font-bold leading-tight truncate">{group.name}</h3>
           {group.targetAmount && (
             <MoneyDisplay
               amount={group.targetAmount}

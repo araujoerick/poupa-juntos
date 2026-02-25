@@ -43,20 +43,20 @@ export function SavingsStreakCard({ contributions }: Props) {
   const streak = calcStreak(contributions);
 
   return (
-    <div className="bg-card rounded-2xl p-4 card-shadow flex flex-col gap-1.5">
-      <div className="flex items-center gap-1.5">
-        <span className="text-xl" aria-hidden>
+    <div className="bg-card rounded-2xl p-3 card-shadow flex flex-col gap-1.5">
+      <div className="flex items-center gap-1">
+        <span className="text-base" aria-hidden>
           🔥
         </span>
-        <span className="text-3xl font-bold text-coral leading-none">
+        <span className="text-xl font-bold text-coral leading-none">
           {streak}
         </span>
       </div>
-      <p className="text-sm font-semibold">
+      <p className="text-[10px] font-semibold leading-none">
         {streak === 1 ? "dia" : "dias"} de streak
       </p>
-      <p className="text-xs text-muted-foreground">
-        {streak === 0 ? "Faça um aporte hoje!" : "Continue assim!"}
+      <p className="text-[10px] text-muted-foreground leading-snug">
+        {streak === 0 ? "Aporte hoje!" : "Continue assim!"}
       </p>
     </div>
   );

@@ -21,7 +21,7 @@ export function PrimaryGroupCard({ group, daysLeft = null }: Props) {
           <p className="text-white/70 text-xs font-medium uppercase tracking-wide">
             Grupo em destaque
           </p>
-          <h2 className="text-xl font-bold mt-0.5 truncate">{group.name}</h2>
+          <h2 className="text-2xl font-bold mt-0.5 truncate">{group.name}</h2>
           {daysLeft !== null && (
             <p className="text-white/60 text-xs mt-0.5">
               {daysLeft === 0 ? "Prazo hoje!" : `${daysLeft} dias restantes`}
