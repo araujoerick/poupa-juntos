@@ -20,7 +20,7 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  app.enableCors();
+  app.enableCors({ origin: process.env['FRONTEND_URL'] ?? true });
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('PoupaJuntos API')

@@ -26,6 +26,7 @@ export class ContributionService {
   private readonly bucketName: string;
   private readonly queueUrl: string;
   private readonly s3Endpoint: string | undefined;
+  private readonly s3PublicUrl: string | undefined;
 
   constructor(
     @InjectRepository(Contribution)
@@ -58,6 +59,7 @@ export class ContributionService {
 
     this.bucketName = config.getOrThrow<string>('S3_BUCKET_NAME');
     this.queueUrl = config.getOrThrow<string>('SQS_QUEUE_URL');
+    this.s3PublicUrl = config.get<string>('S3_PUBLIC_URL');
   }
 
   async create(
@@ -181,9 +183,9 @@ export class ContributionService {
       throw new InternalServerErrorException('Failed to upload receipt');
     }
 
-    return this.s3Endpoint
-      ? `${this.s3Endpoint}/${this.bucketName}/${key}`
-      : `https://${this.bucketName}.s3.amazonaws.com/${key}`;
+    if (this.s3PublicUrl) return `${this.s3PublicUrl}/${key}`;
+    if (this.s3Endpoint) return `${this.s3Endpoint}/${this.bucketName}/${key}`;
+    return `https://${this.bucketName}.s3.amazonaws.com/${key}`;
   }
 
   private async assertMember(groupId: string, clerkId: string): Promise<User> {
