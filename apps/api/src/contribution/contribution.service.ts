@@ -42,12 +42,19 @@ export class ContributionService {
 
     const s3Endpoint = config.get<string>('S3_ENDPOINT');
     this.s3Endpoint = s3Endpoint;
+    const s3AccessKey =
+      config.get<string>('R2_ACCESS_KEY_ID') ??
+      config.getOrThrow<string>('AWS_ACCESS_KEY_ID');
+    const s3SecretKey =
+      config.get<string>('R2_SECRET_ACCESS_KEY') ??
+      config.getOrThrow<string>('AWS_SECRET_ACCESS_KEY');
+
     this.s3 = new S3Client({
       region,
       ...(s3Endpoint ? { endpoint: s3Endpoint, forcePathStyle: true } : {}),
       credentials: {
-        accessKeyId: config.getOrThrow<string>('R2_ACCESS_KEY_ID'),
-        secretAccessKey: config.getOrThrow<string>('R2_SECRET_ACCESS_KEY'),
+        accessKeyId: s3AccessKey,
+        secretAccessKey: s3SecretKey,
       },
     });
 
