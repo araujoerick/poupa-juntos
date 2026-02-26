@@ -39,22 +39,26 @@ export class ContributionService {
     private readonly config: ConfigService,
   ) {
     const region = config.getOrThrow<string>('AWS_REGION');
-    const accessKeyId = config.getOrThrow<string>('AWS_ACCESS_KEY_ID');
-    const secretAccessKey = config.getOrThrow<string>('AWS_SECRET_ACCESS_KEY');
 
     const s3Endpoint = config.get<string>('S3_ENDPOINT');
     this.s3Endpoint = s3Endpoint;
     this.s3 = new S3Client({
       region,
       ...(s3Endpoint ? { endpoint: s3Endpoint, forcePathStyle: true } : {}),
-      credentials: { accessKeyId, secretAccessKey },
+      credentials: {
+        accessKeyId: config.getOrThrow<string>('R2_ACCESS_KEY_ID'),
+        secretAccessKey: config.getOrThrow<string>('R2_SECRET_ACCESS_KEY'),
+      },
     });
 
     const sqsEndpoint = config.get<string>('SQS_ENDPOINT');
     this.sqs = new SQSClient({
       region,
       ...(sqsEndpoint ? { endpoint: sqsEndpoint } : {}),
-      credentials: { accessKeyId, secretAccessKey },
+      credentials: {
+        accessKeyId: config.getOrThrow<string>('AWS_ACCESS_KEY_ID'),
+        secretAccessKey: config.getOrThrow<string>('AWS_SECRET_ACCESS_KEY'),
+      },
     });
 
     this.bucketName = config.getOrThrow<string>('S3_BUCKET_NAME');

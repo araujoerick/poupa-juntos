@@ -62,14 +62,15 @@ export class WorkerService implements OnModuleInit, OnModuleDestroy {
     private readonly config: ConfigService,
   ) {
     const region = config.getOrThrow<string>('AWS_REGION');
-    const accessKeyId = config.getOrThrow<string>('AWS_ACCESS_KEY_ID');
-    const secretAccessKey = config.getOrThrow<string>('AWS_SECRET_ACCESS_KEY');
     const sqsEndpoint = config.get<string>('SQS_ENDPOINT');
 
     this.sqs = new SQSClient({
       region,
       ...(sqsEndpoint ? { endpoint: sqsEndpoint } : {}),
-      credentials: { accessKeyId, secretAccessKey },
+      credentials: {
+        accessKeyId: config.getOrThrow<string>('AWS_ACCESS_KEY_ID'),
+        secretAccessKey: config.getOrThrow<string>('AWS_SECRET_ACCESS_KEY'),
+      },
     });
 
     this.queueUrl = config.getOrThrow<string>('SQS_QUEUE_URL');
