@@ -2,6 +2,8 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { JoinGroupForm } from "@/components/groups/JoinGroupForm";
 
+export const dynamic = "force-dynamic";
+
 export default function JoinGroupPage() {
   return (
     <div className="space-y-6">

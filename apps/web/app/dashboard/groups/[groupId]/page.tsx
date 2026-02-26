@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Plus } from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
+
+export const dynamic = "force-dynamic";
 import { getGroup, getContributions } from "@/lib/api";
 import { ContributionFeed } from "@/components/contributions/ContributionFeed";
 import { InviteLink } from "@/components/groups/InviteLink";

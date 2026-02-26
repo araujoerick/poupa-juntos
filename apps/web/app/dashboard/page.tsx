@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Bell } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
+
+export const dynamic = "force-dynamic";
 import { getGroups, getContributions } from "@/lib/api";
 import { calcDaysLeft, getDailyTip, getServerNow } from "@/lib/utils";
 import { PrimaryGroupCard } from "@/components/groups/PrimaryGroupCard";
