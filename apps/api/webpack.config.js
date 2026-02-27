@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = function (options) {
   const originalExternals = options.externals ?? [];
   const externalsArray = Array.isArray(originalExternals)
@@ -6,6 +8,14 @@ module.exports = function (options) {
 
   return {
     ...options,
+    entry: {
+      main: options.entry,
+      'data-source': path.resolve(__dirname, 'src/data-source.ts'),
+    },
+    output: {
+      ...options.output,
+      filename: '[name].js',
+    },
     externals: [
       function (ctx, callback) {
         const request = typeof ctx === 'string' ? ctx : ctx.request;
