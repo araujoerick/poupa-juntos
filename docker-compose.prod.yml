@@ -28,6 +28,13 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - default
+      - proxy-network
 
 volumes:
   postgres_data:
+
+networks:
+  proxy-network:
+    external: true
