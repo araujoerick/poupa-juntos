@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   password: process.env['DB_PASSWORD'] ?? 'postgres',
   database: process.env['DB_NAME'] ?? 'poupa_juntos',
   entities: [User, Group, Contribution],
-  migrations: ['src/migrations/*.ts'],
+  migrations: [__dirname + '/migrations/*.js'],
   synchronize: false,
   logging: true,
 });
