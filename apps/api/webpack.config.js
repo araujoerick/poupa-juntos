@@ -15,6 +15,7 @@ module.exports = function (options) {
     output: {
       ...options.output,
       filename: '[name].js',
+      libraryTarget: 'commonjs2',
     },
     externals: [
       function (ctx, callback) {
