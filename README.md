@@ -1,135 +1,222 @@
-# Turborepo starter
+# PoupaJuntos
 
-This Turborepo starter is maintained by the Turborepo core team.
+Plataforma de **educação financeira colaborativa** onde grupos economizam juntos para metas comuns — viagens, casamentos, reformas — e têm cada aporte validado automaticamente por IA via leitura de comprovantes bancários.
 
-## Using this example
+---
 
-Run the following command:
+## O que o app faz
 
-```sh
-npx create-turbo@latest
-```
+- **Grupos de poupança:** crie um grupo com meta e prazo, convide membros via link único.
+- **Aportes com IA:** envie o comprovante bancário (PIX/TED/DOC) e o Gemini Vision extrai valor, data e validade automaticamente.
+- **Trust Score:** cada grupo tem um índice de confiança baseado no percentual de aportes validados.
+- **Feed em tempo real:** atualizações de status via WebSocket assim que a IA processa o comprovante.
+- **Learn Hub:** artigos de educação financeira, filtro por categoria e quiz diário rotativo.
+- **Streak de aportes:** contador de dias consecutivos para incentivar o hábito.
 
-## What's inside?
+---
 
-This Turborepo includes the following packages/apps:
+## Stack
 
-### Apps and Packages
+| Camada   | Tecnologia                                                                 |
+| -------- | -------------------------------------------------------------------------- |
+| Frontend | Next.js 16, React 19, Tailwind CSS v4, Shadcn UI, Framer Motion           |
+| Backend  | NestJS 11, TypeORM, PostgreSQL 16                                          |
+| Auth     | Clerk                                                                      |
+| Storage  | Cloudflare R2 (prod) / LocalStack S3 (dev)                                 |
+| Fila     | AWS SQS                                                                    |
+| IA       | Google Gemini API (Vision)                                                 |
+| Infra    | Docker, Turborepo v2, pnpm workspaces                                      |
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+---
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+## Estrutura do monorepo
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+poupa-juntos/
+├── apps/
+│   ├── web/          # Next.js 16 — frontend mobile-first
+│   └── api/          # NestJS 11 — API REST + WebSocket
+├── packages/
+│   ├── shared-types/ # DTOs e enums compartilhados entre web e api
+│   ├── ui/           # Componentes Shadcn reutilizáveis
+│   ├── eslint-config/
+│   └── typescript-config/
+├── docker-compose.yml      # Dev (PostgreSQL + LocalStack)
+├── docker-compose.prod.yml # Prod (PostgreSQL + API)
+└── turbo.json
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+---
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+## Rodando localmente
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+### Pré-requisitos
 
-### Develop
+- Node.js 18+
+- pnpm 9+
+- Docker
 
-To develop all apps and packages, run the following command:
+### 1. Suba a infraestrutura
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+```bash
+docker compose up -d
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+Isso inicia PostgreSQL 16 e LocalStack (S3 + SQS emulados).
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+### 2. Configure as variáveis de ambiente
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+```bash
+# API
+cp apps/api/.env.example apps/api/.env
 
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+# Frontend
+cp apps/web/.env.example apps/web/.env.local
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+Preencha as chaves do Clerk e do Gemini nos arquivos gerados.
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+### 3. Execute as migrations
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+```bash
+pnpm --filter api migration:run
 ```
 
-## Useful Links
+### 4. Inicie o monorepo
 
-Learn more about the power of Turborepo:
+```bash
+pnpm dev
+```
 
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+| Serviço  | URL                            |
+| -------- | ------------------------------ |
+| Frontend | http://localhost:3000          |
+| API      | http://localhost:3001          |
+| Swagger  | http://localhost:3001/api/docs |
+
+---
+
+## Variáveis de ambiente — resumo
+
+### `apps/api/.env`
+
+```env
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/poupa_juntos
+CLERK_SECRET_KEY=sk_test_...
+
+# Storage (LocalStack dev)
+R2_ACCESS_KEY_ID=test
+R2_SECRET_ACCESS_KEY=test
+S3_ENDPOINT=http://localhost:4566
+S3_BUCKET=poupa-juntos-receipts
+
+# Fila (LocalStack dev)
+AWS_ACCESS_KEY_ID=test
+AWS_SECRET_ACCESS_KEY=test
+AWS_REGION=us-east-1
+SQS_ENDPOINT=http://localhost:4566
+SQS_QUEUE_URL=http://localhost:4566/000000000000/poupa-juntos-contributions
+
+GEMINI_API_KEY=...
+PORT=3001
+```
+
+### `apps/web/.env.local`
+
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+---
+
+## Fluxo de validação de aporte
+
+```
+Usuário envia comprovante
+       ↓
+API: upload para S3/R2
+       ↓
+Transação ACID:
+  - Salva Contribution (PENDING)
+  - Incrementa saldo pendente do grupo
+  - Publica mensagem no SQS
+       ↓
+Worker consome SQS
+  - Chama Gemini Vision
+  - Extrai valor, data e tipo de operação
+       ↓
+  VALIDATED → confirma saldo no grupo
+  REJECTED  → reverte saldo pendente
+       ↓
+WebSocket notifica o frontend em tempo real
+```
+
+---
+
+## API — endpoints principais
+
+| Método | Rota                            | Descrição                    |
+| ------ | ------------------------------- | ---------------------------- |
+| GET    | `/health`                       | Health check (DB + SQS)      |
+| POST   | `/groups`                       | Criar grupo                  |
+| GET    | `/groups`                       | Listar grupos do usuário     |
+| PATCH  | `/groups/:id`                   | Atualizar grupo (meta/prazo) |
+| POST   | `/groups/join/:inviteHash`      | Entrar em grupo via convite  |
+| POST   | `/contributions`                | Enviar aporte (multipart)    |
+| GET    | `/contributions/group/:groupId` | Listar aportes do grupo      |
+| DELETE | `/contributions/:id`            | Remover aporte               |
+
+Documentação completa: `http://localhost:3001/api/docs`
+
+---
+
+## Comandos úteis
+
+```bash
+# Build de todos os pacotes
+pnpm build
+
+# Checar tipos TypeScript
+pnpm check-types
+
+# Lint geral
+pnpm lint
+
+# Gerar nova migration (após alterar entidades)
+pnpm --filter api migration:generate -- src/migrations/NomeDaMigration
+
+# Rodar migrations
+pnpm --filter api migration:run
+
+# Reverter última migration
+pnpm --filter api migration:revert
+```
+
+---
+
+## Deploy
+
+A stack de produção usa:
+
+- **VPS** — NestJS API + PostgreSQL via `docker-compose.prod.yml`
+- **Cloudflare R2** — armazenamento de comprovantes (variáveis `R2_*`)
+- **AWS SQS** — fila de validação (região `sa-east-1`)
+- **Vercel** — frontend Next.js (root directory: `apps/web`)
+- **Nginx Proxy Manager** — HTTPS + WebSocket para a API
+
+Consulte [DEPLOY_PLAN.md](./DEPLOY_PLAN.md) para o passo a passo completo.
+
+---
+
+## Design system
+
+- **Fonte:** Sora
+- **Cores:** `coral` #FF7E7E · `lavender` #A78BFA · `teal` #2DD4BF · `brand-bg` #F8F7FF
+- **Mobile-first:** bottom navigation fixa, layout `max-w-md` centralizado em desktop
+- **Tema dark:** tela de envio de comprovante com glassmorphism e scanner animado
